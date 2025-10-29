@@ -1,0 +1,6 @@
+{
+  "name": "syndicate-api-client-typescript",
+  "version": "3.0.0",
+  "description": "Client SDK for Syndicate API Citadel",
+  "main": "client.js"
+}

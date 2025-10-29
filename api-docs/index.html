@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Syndicate API Citadel - API Documentation</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .endpoint { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+    .method { font-weight: bold; color: #007acc; }
+    .summary { font-size: 1.2em; margin: 5px 0; }
+    .description { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Syndicate API Citadel</h1>
+  <p><strong>Version:</strong> 3.0.0</p>
+  <p><strong>Description:</strong> Bun-powered API registry with OpenAPI auto-generation</p>
+
+  <h2>Endpoints</h2>
+  
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <div class="summary">Validate government compliance headers</div>
+        <div class="description">Validates request headers against GOV compliance rules</div>
+        <code>/api/v3/rules/validate</code>
+      </div>
+    
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <div class="summary">Search governance rules by pattern</div>
+        <div class="description">Grep through rule documentation using regex patterns</div>
+        <code>/api/v3/rules/grep</code>
+      </div>
+    
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <div class="summary">Retrieve current API configuration</div>
+        <div class="description"></div>
+        <code>/api/v3/config</code>
+      </div>
+    
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <div class="summary">Store configuration with hash</div>
+        <div class="description"></div>
+        <code>/api/v3/config/store</code>
+      </div>
+    
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <div class="summary">Retrieve encrypted secrets</div>
+        <div class="description"></div>
+        <code>/api/v3/secrets/{name}</code>
+      </div>
+    
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <div class="summary">Verify CSRF protection tokens</div>
+        <div class="description"></div>
+        <code>/api/v3/csrf/verify</code>
+      </div>
+    
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <div class="summary">Stream and process YAML documents</div>
+        <div class="description"></div>
+        <code>/api/v3/yaml/stream</code>
+      </div>
+    
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <div class="summary">WebSocket connection negotiation</div>
+        <div class="description"></div>
+        <code>/api/v3/ws/negotiate</code>
+      </div>
+    
+</body>
+</html>

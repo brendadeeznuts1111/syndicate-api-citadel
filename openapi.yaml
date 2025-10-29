@@ -1,0 +1,378 @@
+openapi: 3.1.0
+info: 
+  title: Syndicate API Citadel
+  description: Bun-powered API registry with OpenAPI auto-generation
+  version: 3.0.0
+  contact: 
+    name: API Architect
+    email: api@syndicate.com
+  license: 
+    name: MIT
+servers: 
+  - url: /api/v3
+tags: 
+  - name: GOV
+    description: GOV Scope
+  - name: SEC
+    description: SEC Scope
+  - name: DEV
+    description: DEV Scope
+  - name: OPS
+    description: OPS Scope
+paths: 
+  /api/v3/rules/validate: 
+    post: 
+      summary: Validate government compliance headers
+      description: Validates request headers against GOV compliance rules
+      tags: 
+        - GOV
+        - VALIDATE
+      operationId: validateHeaders
+      parameters: 
+        - name: files
+          in: query
+          description: Array of rule files to validate against
+          schema: 
+            type: array
+            items: 
+              type: string
+        - name: strict
+          in: query
+          description: Enable strict validation mode
+          schema: 
+            type: boolean
+            default: false
+      responses: 
+        "200": 
+          description: Headers validation successful
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  valid: 
+                    type: boolean
+                  headers: 
+                    type: integer
+                  violations: 
+                    type: array
+                    items: 
+                      type: string
+                  timestamp: 
+                    type: string
+                    format: date-time
+        "400": 
+          description: Validation failed
+      x-source: 
+        - /Users/nolarose/Projects/project1/rules/gov/gov-header-001.md
+  /api/v3/rules/grep: 
+    get: 
+      summary: Search governance rules by pattern
+      description: Grep through rule documentation using regex patterns
+      tags: 
+        - GOV
+        - GREP
+        - SEARCH
+      operationId: grepRules
+      parameters: 
+        - name: q
+          in: query
+          description: Regex pattern to search for
+          schema: 
+            type: string
+            example: "[GOV-.*REQUIRED]"
+        - name: scope
+          in: query
+          description: Filter by governance scope
+          schema: 
+            type: string
+            enum: 
+              &enum
+              - GOV
+              - SEC
+              - DEV
+              - OPS
+        - name: limit
+          in: query
+          description: Maximum number of results
+          schema: 
+            type: integer
+            default: 50
+            maximum: 100
+      responses: 
+        "200": 
+          description: Search results
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  query: 
+                    type: string
+                  scope: 
+                    type: string
+                  results: 
+                    type: array
+                    items: 
+                      type: object
+                  total: 
+                    type: integer
+                  cached: 
+                    type: boolean
+      x-source: 
+        - /Users/nolarose/Projects/project1/rules/gov/gov-header-001.md
+      x-grep: true
+  /api/v3/config: 
+    get: 
+      summary: Retrieve current API configuration
+      tags: 
+        - CONFIG
+        - ADMIN
+      operationId: getConfiguration
+      parameters: 
+        []
+      responses: 
+        "200": 
+          description: Current configuration
+          content: 
+            application/yaml: 
+              schema: 
+                type: object
+      x-source: 
+        []
+      x-admin: true
+  /api/v3/config/store: 
+    post: 
+      summary: Store configuration with hash
+      tags: 
+        - CONFIG
+        - REGISTRY
+        - ADMIN
+      operationId: storeConfiguration
+      parameters: 
+        []
+      responses: 
+        "201": 
+          description: Configuration stored
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  hash: 
+                    type: string
+                  size: 
+                    type: integer
+                  storedAt: 
+                    type: string
+                    format: date-time
+      x-source: 
+        []
+      requestBody: 
+        content: 
+          application/yaml: 
+            schema: 
+              type: object
+      x-admin: true
+  "/api/v3/secrets/{name}": 
+    get: 
+      summary: Retrieve encrypted secrets
+      tags: 
+        - SECURITY
+        - VAULT
+        - CRYPTO
+      operationId: getSecret
+      parameters: 
+        - name: name
+          in: path
+          required: true
+          description: Secret identifier
+          schema: 
+            type: string
+            pattern: "^[A-Z_][A-Z0-9_]*$"
+      responses: 
+        "200": 
+          description: Secret retrieved
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  name: 
+                    type: string
+                  retrieved: 
+                    type: boolean
+                  length: 
+                    type: integer
+                  secure: 
+                    type: boolean
+        "404": 
+          description: Secret not found
+      x-source: 
+        - /Users/nolarose/Projects/project1/rules/sec/sec-leak-001.md
+      x-audit: true
+      x-encrypt: true
+  /api/v3/csrf/verify: 
+    post: 
+      summary: Verify CSRF protection tokens
+      tags: 
+        - SECURITY
+        - CSRF
+      operationId: verifyCsrf
+      parameters: 
+        - name: token
+          in: header
+          required: true
+          description: CSRF token to verify
+          schema: 
+            type: string
+      responses: 
+        "200": 
+          description: CSRF token valid
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  verified: 
+                    type: boolean
+                  token: 
+                    type: string
+                    enum: 
+                      - valid
+                      - missing
+                      - invalid
+                  timestamp: 
+                    type: string
+                    format: date-time
+      x-source: 
+        []
+  /api/v3/yaml/stream: 
+    post: 
+      summary: Stream and process YAML documents
+      tags: 
+        - REGISTRY
+        - STREAM
+        - PROCESSING
+      operationId: streamYaml
+      parameters: 
+        []
+      responses: 
+        "200": 
+          description: YAML processed
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  complete: 
+                    type: boolean
+                  totalSize: 
+                    type: integer
+                  processedAt: 
+                    type: string
+                    format: date-time
+      x-source: 
+        - /Users/nolarose/Projects/project1/rules/gov/gov-header-001.md
+      requestBody: 
+        content: 
+          application/yaml: 
+            schema: 
+              type: object
+      x-streaming: true
+  /api/v3/ws/negotiate: 
+    get: 
+      summary: WebSocket connection negotiation
+      tags: 
+        - WEBSOCKET
+        - REALTIME
+      operationId: negotiateWebsocket
+      parameters: 
+        - name: protocol
+          in: query
+          description: WebSocket subprotocol
+          schema: 
+            type: string
+            enum: 
+              - json-rpc
+              - graphql-ws
+              - api-events
+      responses: 
+        "200": 
+          description: WebSocket connection established
+      x-source: 
+        []
+      x-websocket: true
+components: 
+  securitySchemes: 
+    cookieAuth: 
+      type: apiKey
+      in: cookie
+      name: sessionId
+    csrfAuth: 
+      type: apiKey
+      in: cookie
+      name: csrfToken
+  schemas: 
+    Scope: 
+      type: string
+      enum: 
+        *enum
+      description: Available governance scopes
+    Error: 
+      type: object
+      properties: 
+        error: 
+          type: string
+        message: 
+          type: string
+        timestamp: 
+          type: string
+          format: date-time
+        code: 
+          type: string
+    ValidationResult: 
+      type: object
+      properties: 
+        valid: 
+          type: boolean
+        headers: 
+          type: integer
+        violations: 
+          type: array
+          items: 
+            type: string
+        timestamp: 
+          type: string
+          format: date-time
+    SearchResult: 
+      type: object
+      properties: 
+        query: 
+          type: string
+        scope: 
+          type: string
+        results: 
+          type: array
+          items: 
+            type: object
+        total: 
+          type: integer
+        cached: 
+          type: boolean
+security: 
+  - cookieAuth: 
+      type: apiKey
+      in: cookie
+      name: sessionId
+      description: Session cookie for authentication
+  - csrfAuth: 
+      type: apiKey
+      in: cookie
+      name: csrfToken
+      description: CSRF protection token
+  - bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer token authentication

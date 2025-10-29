@@ -1,0 +1,12 @@
+# Test YAML
+version: "3.0.0"
+rules:
+  header:
+    schema:
+      scope: [GOV, SEC, DEV, OPS]
+  api:
+    basePath: /api/v3
+    endpoints:
+      - path: /test
+        method: GET
+        summary: Test endpoint

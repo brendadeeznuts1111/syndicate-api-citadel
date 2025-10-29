@@ -1,0 +1,50 @@
+{
+  "name": "syndicate-api-citadel",
+  "version": "3.0.0",
+  "description": "Bun 1.3-powered API Registry with OpenAPI auto-generation",
+  "scripts": {
+    "// ===== API GATEWAY & GENERATION ===== //": "",
+    "api:generate": "bun run scripts/api-gen.js",
+    "api:watch": "bun run scripts/api-gen.js --watch",
+    "api:lint": "bun run scripts/api-gen.js --lint",
+    "api:client": "bun run scripts/api-gen.js --generate-client",
+    "api:docs": "bun run scripts/api-gen.js --generate-docs",
+    "api:json": "bun run scripts/api-gen.js --output-format json",
+    "api:deploy-gateway": "bun run src/api/gateway.ts",
+    "api:start-dev": "bun run scripts/api-gen.js --watch & bun run src/api/gateway.ts",
+
+    "// ===== BUN 1.3 ENHANCED FEATURES ===== //": "",
+    "bun:yaml-import": "bun run scripts/api-gen.js --verbose", // Demonstrates direct YAML imports
+    "bun:compression-test": "curl -H 'Accept-Encoding: zstd,gzip' http://localhost:3004/health", // Test Zstandard compression
+    "bun:websocket-test": "websocat ws://localhost:3004/api/v3/ws/negotiate --header 'Sec-WebSocket-Protocol: json-rpc'", // Test WebSocket permessage-deflate
+
+    "// ===== CHILD PROCESSES & STREAMS ===== //": "",
+    "stream:processor": "bun run scripts/websocket-processor.ts",
+    "ai:inference-worker": "bun run src/ai/inference-worker.ts",
+
+    "// ===== LEGACY COMMANDS ===== //": "",
+    "api:openapi": "bun run scripts/api-gen.js",
+    "api:validate": "bun run scripts/validate-api.js",
+    "debug:enhanced": "bun run scripts/source-map-consumer.js --auto-detect",
+    "dev": "bun run index.ts",
+    "dev:debug": "bun --inspect run index.ts",
+    "build": "bun build index.ts",
+    "test": "bun test api.test.ts",
+    "test:watch": "bun test --watch api.test.ts",
+    "bench": "bun run scripts/benchmark.js",
+
+    "// ===== PRODUCTION & DEPLOYMENT ===== //": "",
+    "build:fullstack": "bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
+    "build:executable": "bun run scripts/api-gen.js --generate-client --generate-docs && bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
+    "smd:run": "bun run scripts/source-map-discovery.ts"
+  },
+  "dependencies": {
+    "bun": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
+  }
+}

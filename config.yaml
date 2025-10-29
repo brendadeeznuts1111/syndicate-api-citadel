@@ -1,0 +1,34 @@
+# config.yaml - Bun native YAML module import demo
+# This file can be imported directly as an ES module!
+
+server:
+  port: 3004
+  host: localhost
+  timeout: 30000
+
+database:
+  primary:
+    type: postgres
+    host: localhost
+    port: 5432
+    name: syndicate_api
+  cache:
+    type: redis
+    host: localhost
+    port: 6379
+
+features:
+  websocket: true
+  streaming: true
+  compression: true
+  hotReload: true
+
+security:
+  csrf: true
+  rateLimit: true
+  cors: true
+
+logging:
+  level: info
+  pretty: true
+  timestamp: true
