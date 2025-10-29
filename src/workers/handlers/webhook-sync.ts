@@ -28,7 +28,7 @@ interface GitHubWebhookPayload {
 }
 
 // Verify GitHub webhook signature
-function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
+async function verifyWebhookSignature(payload: string, signature: string, secret: string): Promise<boolean> {
   try {
     const encoder = new TextEncoder();
     const key = await crypto.subtle.importKey(

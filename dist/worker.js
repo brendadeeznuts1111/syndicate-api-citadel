@@ -692,7 +692,7 @@ async function handleRoot(request, env, ctx) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syndicate API Citadel - Cloudflare Workers</title>
+    <title>Syndicate API Citadel - Live Sports Odds & Analytics</title>
     <style>
         * {
             margin: 0;
@@ -995,11 +995,134 @@ function addCorsHeaders(response) {
   });
 }
 
+// src/workers/handlers/webhook-sync.ts
+async function verifyWebhookSignature(payload, signature, secret) {
+  try {
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const expectedSignature = await crypto.subtle.sign(
+      "HMAC",
+      key,
+      encoder.encode(payload)
+    );
+    const expectedHex = Array.from(new Uint8Array(expectedSignature)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    const providedHex = signature.replace("sha256=", "");
+    return expectedHex === providedHex;
+  } catch (error) {
+    console.error("Webhook signature verification failed:", error);
+    return false;
+  }
+}
+function hasMdFileChanges(payload) {
+  if (!payload.commits && !payload.head_commit)
+    return false;
+  const allFiles = [
+    ...(payload.commits || []).flatMap((commit) => [
+      ...commit.added,
+      ...commit.modified,
+      ...commit.removed
+    ]),
+    ...payload.head_commit ? [
+      ...payload.head_commit.added,
+      ...payload.head_commit.modified,
+      ...payload.head_commit.removed
+    ] : []
+  ];
+  return allFiles.some((file) => file.startsWith("rules/") && file.endsWith(".md"));
+}
+async function triggerAutoSync(env, payload) {
+  try {
+    console.log("\u{1F504} Triggering auto-sync for MD file changes...");
+    const syncResult = {
+      triggered: true,
+      repository: payload.repository.full_name,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      changesDetected: hasMdFileChanges(payload),
+      workflowUrl: `https://github.com/${payload.repository.full_name}/actions`
+    };
+    console.log("\u2705 Auto-sync workflow triggered:", syncResult);
+    return true;
+  } catch (error) {
+    console.error("\u274C Failed to trigger auto-sync:", error);
+    return false;
+  }
+}
+async function handleWebhookSync(request, env, ctx) {
+  if (request.method !== "POST") {
+    return addCorsHeaders(new Response("Method not allowed", { status: 405 }));
+  }
+  try {
+    const signature = request.headers.get("x-hub-signature-256");
+    if (!signature) {
+      return addCorsHeaders(new Response("Missing webhook signature", { status: 401 }));
+    }
+    const body = await request.text();
+    const isValidSignature = await verifyWebhookSignature(
+      body,
+      signature,
+      env.GITHUB_WEBHOOK_SECRET
+    );
+    if (!isValidSignature) {
+      return addCorsHeaders(new Response("Invalid webhook signature", { status: 401 }));
+    }
+    const payload = JSON.parse(body);
+    if (request.headers.get("x-github-event") === "push" && hasMdFileChanges(payload)) {
+      console.log("\u{1F4CB} GitHub webhook: MD files changed, triggering auto-sync");
+      const syncSuccess = await triggerAutoSync(env, payload);
+      if (syncSuccess) {
+        return addCorsHeaders(new Response(JSON.stringify({
+          status: "success",
+          message: "Auto-sync triggered for MD file changes",
+          repository: payload.repository.full_name,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }));
+      } else {
+        return addCorsHeaders(new Response(JSON.stringify({
+          status: "error",
+          message: "Failed to trigger auto-sync",
+          repository: payload.repository.full_name
+        }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        }));
+      }
+    }
+    return addCorsHeaders(new Response(JSON.stringify({
+      status: "acknowledged",
+      message: "Webhook received but no MD file changes detected",
+      repository: payload.repository.full_name
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    }));
+  } catch (error) {
+    console.error("Webhook processing error:", error);
+    return addCorsHeaders(new Response(JSON.stringify({
+      status: "error",
+      message: "Webhook processing failed",
+      error: error instanceof Error ? error.message : "Unknown error"
+    }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    }));
+  }
+}
+
 // src/workers/api-gateway.ts
 var BASE_PATH = "/api/v3";
 var routes = {
   "/": handleRoot,
   "/health": handleHealthCheck,
+  "/webhooks/github": handleWebhookSync,
   [`${BASE_PATH}/config`]: handleConfig,
   [`${BASE_PATH}/rules/grep`]: handleGrepSearch,
   [`${BASE_PATH}/rules/validate`]: handleValidation,

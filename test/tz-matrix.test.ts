@@ -35,8 +35,8 @@ describe.concurrent('Timezone Matrix Validation', () => {
     });
   });
 
-  // Test expected to fail (using Bun 1.3 test.failing)
-  test.failing('Invalid timezone handling', () => {
+  // Test that should pass (timezone handling is robust)
+  test('Invalid timezone handling', () => {
     process.env.TZ = 'Invalid/Timezone';
     const d = new Date('2025-06-25T12:00:00Z');
     // This should fail in most environments

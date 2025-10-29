@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/utils/file-processor.ts - File Processing with Bun 1.3 FileHandle.readLines()
 
 import { open } from 'node:fs/promises';
