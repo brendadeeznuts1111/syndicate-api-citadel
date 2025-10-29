@@ -8,6 +8,7 @@ import { handleValidation } from './handlers/validation';
 import { handleOpenAPI } from './handlers/openapi';
 import { handleWebSocket } from './handlers/websocket';
 import { handleRoot } from './handlers/root';
+import { handleWebhookSync } from './handlers/webhook-sync';
 import { corsHeaders, addCorsHeaders } from './utils/cors';
 
 export interface Env {
@@ -21,6 +22,7 @@ const BASE_PATH = '/api/v3';
 const routes: Record<string, (request: Request, env: Env, ctx: ExecutionContext) => Promise<Response>> = {
   '/': handleRoot,
   '/health': handleHealthCheck,
+  '/webhooks/github': handleWebhookSync,
   [`${BASE_PATH}/config`]: handleConfig,
   [`${BASE_PATH}/rules/grep`]: handleGrepSearch,
   [`${BASE_PATH}/rules/validate`]: handleValidation,

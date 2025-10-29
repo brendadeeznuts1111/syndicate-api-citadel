@@ -1,0 +1,99 @@
+name: Auto-Sync Registry
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'rules/**/*.md'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'rules/**/*.md'
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force regeneration even if no changes detected'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  auto-sync:
+    name: Auto-Sync MD Changes → OpenAPI → Registry
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Run auto-sync
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+      run: |
+        if [ "${{ github.event.inputs.force_sync }}" = "true" ] || [ "${{ github.event_name }}" = "push" ]; then
+          echo "🔄 Running auto-sync with push enabled..."
+          bun run scripts/auto-sync-registry.ts --push
+        else
+          echo "🔍 Running dry-run validation..."
+          bun run scripts/auto-sync-registry.ts --dry-run
+        fi
+
+    - name: Upload sync results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: auto-sync-results-${{ github.run_number }}
+        path: |
+          openapi.yaml
+          openapi.json
+          .routes.index
+        retention-days: 30
+
+  validate-sync:
+    name: Validate Auto-Sync Results
+    runs-on: ubuntu-latest
+    needs: auto-sync
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Validate OpenAPI spec
+      run: |
+        bun run api:gen
+        bun run audit:ci
+
+    - name: Check for uncommitted changes
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "⚠️  Uncommitted changes detected after sync:"
+          git status --porcelain
+          exit 1
+        else
+          echo "✅ No uncommitted changes - sync completed successfully"
+        fi

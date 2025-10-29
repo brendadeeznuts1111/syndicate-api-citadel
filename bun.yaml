@@ -237,6 +237,28 @@ api:
           description: "WebSocket connection established"
       x-source: ["rules/gov/gov-header-001.md"]
 
+    - path: "/webhooks/github"
+      method: "POST"
+      id: "github-webhook-sync"
+      handler: "./src/workers/handlers/webhook-sync.ts"
+      auth: "none"
+      request:
+        schema: "GitHubWebhook"
+        content_type: "application/json"
+        required: true
+      response:
+        "200":
+          schema: "WebhookResponse"
+          example: { status: "success", message: "Auto-sync triggered" }
+        "401":
+          schema: "Error"
+        "500":
+          schema: "Error"
+      tags: ["webhooks", "github", "automation"]
+      summary: "GitHub webhook for auto-sync registry"
+      sourcemap: true
+      x-source: ["rules/dev/dev-testing-001.md"]
+
 # OpenAPI specification configuration
 openapi:
   generate: true
