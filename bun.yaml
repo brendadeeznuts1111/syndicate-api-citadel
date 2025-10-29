@@ -163,6 +163,7 @@ rules:
               application/yaml:
                 schema: { type: object }
         x-admin: true
+        x-source: ["DEV-TESTING-001"]
 
       - path: /config/store
         method: POST
@@ -186,6 +187,7 @@ rules:
                     size: { type: integer }
                     storedAt: { type: string, format: date-time }
         x-admin: true
+        x-source: ["DEV-TESTING-001"]
 
       - path: /secrets/{name}
         method: GET
@@ -239,6 +241,7 @@ rules:
                     verified: { type: boolean }
                     token: { type: string, enum: [valid, missing, invalid] }
                     timestamp: { type: string, format: date-time }
+        x-source: ["SEC-LEAK-001"]
 
       - path: /yaml/stream
         method: POST
@@ -277,7 +280,7 @@ rules:
           200:
             description: WebSocket connection established
         x-websocket: true
-        x-source: ["GOV-REQ-001"]
+        x-source: ["GOV-HEADER-001"]
 
     # OpenAPI specification configuration
     openapi:

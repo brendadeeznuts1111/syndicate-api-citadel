@@ -1,0 +1,82 @@
+extends: ["spectral:oas", "spectral:asyncapi"]
+
+rules:
+  # Custom traceability rules
+  citadel-traceability:
+    description: "Ensure all endpoints have x-source traceability"
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      - field: "x-source"
+        function: truthy
+
+  citadel-source-array:
+    description: "x-source must be an array of strings"
+    severity: warn
+    given: "$.paths[*][*].x-source"
+    then:
+      - function: schema
+        functionOptions:
+          schema:
+            type: array
+            items:
+              type: string
+
+  citadel-source-files:
+    description: "x-source files should exist in rules/ directory"
+    severity: info
+    given: "$.paths[*][*].x-source[*]"
+    then:
+      - function: pattern
+        functionOptions:
+          match: "^rules/"
+
+  # Enhanced OpenAPI rules
+  operation-description:
+    description: "Operations must have descriptions"
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      - field: "description"
+        function: truthy
+
+  operation-summary:
+    description: "Operations must have summaries"
+    severity: warn
+    given: "$.paths[*][*]"
+    then:
+      - field: "summary"
+        function: truthy
+
+  # Security rules
+  security-defined:
+    description: "Security schemes must be properly defined"
+    severity: error
+    given: "$.components.securitySchemes[*]"
+    then:
+      - field: "type"
+        function: enumerated
+        functionOptions:
+          values: ["apiKey", "http", "oauth2", "openIdConnect"]
+
+  # Response rules
+  success-response:
+    description: "Operations must define success responses"
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      - field: "responses"
+        function: truthy
+      - field: "responses.200"
+        function: truthy
+
+  # Schema validation
+  schema-types:
+    description: "Schemas must have valid types"
+    severity: warn
+    given: "$.components.schemas[*]"
+    then:
+      - field: "type"
+        function: enumerated
+        functionOptions:
+          values: ["string", "number", "integer", "boolean", "object", "array"]

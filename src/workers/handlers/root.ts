@@ -69,7 +69,7 @@ export async function handleRoot(request: Request, env: Env, ctx: ExecutionConte
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syndicate API Citadel - Cloudflare Workers</title>
+    <title>Syndicate API Citadel - Live Sports Odds & Analytics</title>
     <style>
         * {
             margin: 0;

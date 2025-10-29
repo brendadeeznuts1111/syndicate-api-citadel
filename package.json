@@ -28,6 +28,8 @@
     "build:fullstack": "bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
     "build:executable": "bun run scripts/api-gen.js --generate-client --generate-docs && bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
     "smd:run": "bun run scripts/source-map-discovery.ts",
+    "audit:traceability": "bun run scripts/audit-traceability.ts",
+    "audit:ci": "bun run scripts/audit-traceability.ts --min 95 --strict",
     "cf:build": "esbuild src/workers/index.ts --bundle --format=esm --outfile=dist/worker.js --platform=browser --target=es2021",
     "cf:deploy": "wrangler deploy",
     "cf:dev": "wrangler dev",
