@@ -3,7 +3,6 @@
   "version": "3.0.0",
   "description": "Bun 1.3-powered API Registry with OpenAPI auto-generation",
   "scripts": {
-    "// ===== API GATEWAY & GENERATION ===== //": "",
     "api:generate": "bun run scripts/api-gen.js",
     "api:watch": "bun run scripts/api-gen.js --watch",
     "api:lint": "bun run scripts/api-gen.js --lint",
@@ -12,17 +11,11 @@
     "api:json": "bun run scripts/api-gen.js --output-format json",
     "api:deploy-gateway": "bun run src/api/gateway.ts",
     "api:start-dev": "bun run scripts/api-gen.js --watch & bun run src/api/gateway.ts",
-
-    "// ===== BUN 1.3 ENHANCED FEATURES ===== //": "",
-    "bun:yaml-import": "bun run scripts/api-gen.js --verbose", // Demonstrates direct YAML imports
-    "bun:compression-test": "curl -H 'Accept-Encoding: zstd,gzip' http://localhost:3004/health", // Test Zstandard compression
-    "bun:websocket-test": "websocat ws://localhost:3004/api/v3/ws/negotiate --header 'Sec-WebSocket-Protocol: json-rpc'", // Test WebSocket permessage-deflate
-
-    "// ===== CHILD PROCESSES & STREAMS ===== //": "",
+    "bun:yaml-import": "bun run scripts/api-gen.js --verbose",
+    "bun:compression-test": "curl -H 'Accept-Encoding: zstd,gzip' http://localhost:3004/health",
+    "bun:websocket-test": "websocat ws://localhost:3004/api/v3/ws/negotiate --header 'Sec-WebSocket-Protocol: json-rpc'",
     "stream:processor": "bun run scripts/websocket-processor.ts",
     "ai:inference-worker": "bun run src/ai/inference-worker.ts",
-
-    "// ===== LEGACY COMMANDS ===== //": "",
     "api:openapi": "bun run scripts/api-gen.js",
     "api:validate": "bun run scripts/validate-api.js",
     "debug:enhanced": "bun run scripts/source-map-consumer.js --auto-detect",
@@ -32,17 +25,23 @@
     "test": "bun test api.test.ts",
     "test:watch": "bun test --watch api.test.ts",
     "bench": "bun run scripts/benchmark.js",
-
-    "// ===== PRODUCTION & DEPLOYMENT ===== //": "",
     "build:fullstack": "bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
     "build:executable": "bun run scripts/api-gen.js --generate-client --generate-docs && bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
-    "smd:run": "bun run scripts/source-map-discovery.ts"
+    "smd:run": "bun run scripts/source-map-discovery.ts",
+    "cf:build": "esbuild src/workers/index.ts --bundle --format=esm --outfile=dist/worker.js --platform=browser --target=es2021",
+    "cf:deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev",
+    "cf:login": "wrangler auth login",
+    "cf:whoami": "wrangler whoami"
   },
   "dependencies": {
     "bun": "^1.3.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "@cloudflare/workers-types": "^4.20241022.0",
+    "typescript": "^5.0.0",
+    "esbuild": "^0.19.0"
   },
   "engines": {
     "bun": ">=1.3.0"
