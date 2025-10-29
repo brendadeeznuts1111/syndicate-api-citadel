@@ -1,0 +1,41 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🛡️ Enhanced Runtime Gate - Pre-commit Validation"
+echo "==============================================="
+
+# Run critical runtime tests before allowing commit
+echo "🔍 Running enhanced runtime validation..."
+
+# Timezone matrix (quick check)
+if ! bun test test/tz-matrix.test.ts > /dev/null 2>&1; then
+    echo "❌ Timezone matrix test failed"
+    exit 1
+fi
+
+# Memory leak detection
+if ! bun test test/memory.test.ts > /dev/null 2>&1; then
+    echo "❌ Memory leak detection failed"
+    exit 1
+fi
+
+# Async leak detection
+if ! bun test test/async-leak.test.ts > /dev/null 2>&1; then
+    echo "❌ Async leak detection failed"
+    exit 1
+fi
+
+# Source map integrity
+if ! bun test test/sourcemap.test.ts > /dev/null 2>&1; then
+    echo "❌ Source map integrity check failed"
+    exit 1
+fi
+
+# Quick traceability check
+if ! bun run audit:ci > /dev/null 2>&1; then
+    echo "❌ Traceability audit failed"
+    exit 1
+fi
+
+echo "✅ All enhanced runtime checks passed!"
+echo "🚀 Commit approved - runtime integrity maintained"
