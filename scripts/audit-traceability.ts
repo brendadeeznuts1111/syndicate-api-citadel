@@ -97,7 +97,17 @@ EXIT CODES:
 async function loadSpec(specPath: string): Promise<any> {
   try {
     const content = await file(specPath).text();
-    return content.trim().startsWith('{') ? JSON.parse(content) : Bun.YAML.parse(content);
+
+    // Try YAML first (more common for OpenAPI), then JSON
+    try {
+      return Bun.YAML.parse(content);
+    } catch (yamlError) {
+      try {
+        return JSON.parse(content);
+      } catch (jsonError) {
+        throw new Error(`Failed to parse as YAML or JSON: ${yamlError.message}`);
+      }
+    }
   } catch (error) {
     console.error(`❌ Failed to load spec from ${specPath}:`, error);
     process.exit(1);

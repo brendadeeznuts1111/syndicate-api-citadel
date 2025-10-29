@@ -48,13 +48,3 @@ rules:
         # Security pattern: SEC-LEAK-*
         security: 'SEC-LEAK-[0-9]{3}'
 
-    # Validation rules
-    validation:
-      max-header-length: 256
-      allowed-characters: '^[A-Z0-9_-]+$'
-      required-prefix: 'X-GOV-'
-      case-sensitive: false
-
-# =============================================================================
-# 🚀 API CONFIGURATION - Endpoint Definitions & Routing
-# =============================================================================

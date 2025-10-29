@@ -1,0 +1,50 @@
+
+    # Bun debugger configuration
+    bunDebuggerPort: 9229
+    inspectorProtocol: true
+
+    # Error handling configuration
+    errorStackTraceRewriting: true
+    customErrorReporting: true
+    errorReportingFormat: "enhanced"
+
+    # CLI debugging options
+    cliSourceMapResolution: true
+    cliErrorColorization: true
+    cliStackTraceDepth: 10
+
+    # Performance debugging
+    performanceTracing: false
+    memoryProfiling: false
+    gcTracing: false
+
+    # API debugging metadata
+    apiDebugMetadata: true
+    openapiDebugInstructions: true
+
+  # =============================================================================
+  # 📦 BUILD & DEPLOYMENT CONFIGURATION
+  # =============================================================================
+  build:
+    target: bun
+    minify: true
+    sourcemap: true
+    sourcemapExternal: true
+    outdir: dist
+    entrypoints: [src/api/gateway.ts]
+
+  deploy:
+    platform: bun
+    runtime: bun
+    environment: development
+    scaling:
+      min: 1
+      max: 10
+      targetCpu: 70
+    healthCheck:
+      path: /health
+      interval: 30000
+      timeout: 5000
+    debug:
+      enableInspector: true
+      inspectorPort: 9229

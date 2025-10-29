@@ -1,0 +1,136 @@
+{
+  "timestamp": "2025-10-29T14:36:20.690Z",
+  "totalFiles": 13,
+  "totalHandlers": 51,
+  "index": [
+    {
+      "file": "src/workers/handlers/root.ts",
+      "exports": [
+        "handleRoot"
+      ],
+      "path": "workers/handlers/root"
+    },
+    {
+      "file": "src/workers/utils/cors.ts",
+      "exports": [
+        "corsHeaders",
+        "addCorsHeaders"
+      ],
+      "path": "workers/utils/cors"
+    },
+    {
+      "file": "src/workers/handlers/openapi.ts",
+      "exports": [
+        "handleOpenAPI"
+      ],
+      "path": "workers/handlers/openapi"
+    },
+    {
+      "file": "src/workers/index.ts",
+      "exports": [
+        "scheduled"
+      ],
+      "path": "workers/index"
+    },
+    {
+      "file": "src/workers/handlers/health.ts",
+      "exports": [
+        "handleHealthCheck"
+      ],
+      "path": "workers/handlers/health"
+    },
+    {
+      "file": "src/workers/handlers/validation.ts",
+      "exports": [
+        "handleValidation"
+      ],
+      "path": "workers/handlers/validation"
+    },
+    {
+      "file": "src/workers/api-gateway.ts",
+      "exports": [
+        "handleRequest"
+      ],
+      "path": "workers/api-gateway"
+    },
+    {
+      "file": "src/workers/handlers/config.ts",
+      "exports": [
+        "handleConfig"
+      ],
+      "path": "workers/handlers/config"
+    },
+    {
+      "file": "src/workers/handlers/websocket.ts",
+      "exports": [
+        "handleWebSocket"
+      ],
+      "path": "workers/handlers/websocket"
+    },
+    {
+      "file": "src/workers/handlers/grep.ts",
+      "exports": [
+        "handleGrepSearch"
+      ],
+      "path": "workers/handlers/grep"
+    },
+    {
+      "file": "src/utils/require-extensions-demo.ts",
+      "exports": [
+        "registerCustomExtension",
+        "listRegisteredExtensions"
+      ],
+      "path": "utils/require-extensions-demo"
+    },
+    {
+      "file": "src/generated/api-server-config.ts",
+      "exports": [
+        "config",
+        "loadYamlConfig",
+        "databaseConnections",
+        "redisConnections",
+        "websocketConfigs",
+        "compressionConfigs",
+        "aiConfigs",
+        "semanticSchemas",
+        "ruleDefinitions",
+        "validateAgainstSchema",
+        "createRoutes",
+        "signalReload",
+        "checkReloadSignal",
+        "getDatabaseConnection",
+        "getRedisConnection",
+        "getWebsocketConfig",
+        "spawnWebSocketProcessor",
+        "createSecureCookie",
+        "parseRequestCookies",
+        "setResponseCookie",
+        "clearCookie",
+        "compressResponse",
+        "createCompressedResponse",
+        "processRequestStream",
+        "streamToText",
+        "streamToJson",
+        "streamToBytes",
+        "streamToBlob",
+        "loadAIModel",
+        "instantiateAIModel",
+        "runAIInference"
+      ],
+      "path": "generated/api-server-config"
+    },
+    {
+      "file": "src/utils/vm-examples.ts",
+      "exports": [
+        "greet",
+        "double",
+        "config",
+        "processText",
+        "metadata",
+        "processNumber",
+        "metadata"
+      ],
+      "path": "utils/vm-examples"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+    # Validation rules
+    validation:
+      max-header-length: 256
+      allowed-characters: '^[A-Z0-9_-]+$'
+      required-prefix: 'X-GOV-'
+      case-sensitive: false
+
+# =============================================================================
+# 🚀 API CONFIGURATION - Endpoint Definitions & Routing
+# =============================================================================
+api:
+    # Server configuration
+    basePath: /api/v3
+    host: localhost:3004
+    port: 3004
+    protocol: http
+
+    # Security configuration (OpenAPI 3.1 compatible)
+    security:
+      - cookieAuth:
+          type: apiKey
+          in: cookie
+          name: sessionId
+          description: "Session cookie for authentication"
+      - csrfAuth:
+          type: apiKey
+          in: cookie
+          name: csrfToken
+          description: "CSRF protection token"
+      - bearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+          description: "JWT Bearer token authentication"
+
+    # API endpoint definitions (auto-generates OpenAPI spec)
+    endpoints:
+      - path: /rules/validate
+        method: POST
+        summary: Validate government compliance headers
+        description: "Validates request headers against GOV compliance rules"
+        tags: [GOV, VALIDATE]
+        operationId: validateHeaders
+        parameters:
+          - name: files
+            in: query
+            description: "Array of rule files to validate against"
+            schema: { type: array, items: { type: string } }
+          - name: strict
+            in: query

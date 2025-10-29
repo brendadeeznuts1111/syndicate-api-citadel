@@ -1,0 +1,50 @@
+  # =============================================================================
+  # 🗄️ DATABASE CONFIGURATION - Bun.SQL Integration
+  # =============================================================================
+  database:
+    # Primary database connection (auto-initialized by gateway)
+    primary:
+      type: postgres
+      host: localhost
+      port: 5432
+      database: syndicate_api
+      username: ${DB_USER:-api_user}
+      password: ${DB_PASS}
+      ssl: ${DB_SSL:-false}
+      maxConnections: 20
+      idleTimeout: 30000
+      schema: public
+
+    # Read replica for high-traffic endpoints
+    replica:
+      type: postgres
+      host: localhost
+      port: 5433
+      database: syndicate_api
+      username: ${DB_USER:-api_user}
+      password: ${DB_PASS}
+      readOnly: true
+
+    # Analytics database
+    analytics:
+      type: clickhouse
+      host: localhost
+      port: 8123
+      database: analytics
+      username: ${CLICKHOUSE_USER:-default}
+      password: ${CLICKHOUSE_PASS}
+
+  # =============================================================================
+  # 🔴 REDIS CONFIGURATION - Bun.redis Integration
+  # =============================================================================
+  redis:
+    # Session store and caching
+    primary:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASS}
+      db: 0
+      keyPrefix: "syndicate:"
+      ttl: 3600
+
+    # Pub/Sub for real-time features

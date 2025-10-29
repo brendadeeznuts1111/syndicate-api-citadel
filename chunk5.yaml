@@ -1,0 +1,50 @@
+            required: true
+            description: "Secret identifier"
+            schema: { type: string, pattern: '^[A-Z_][A-Z0-9_]*$' }
+        responses:
+          200:
+            description: Secret retrieved
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    retrieved: { type: boolean }
+                    length: { type: integer }
+                    secure: { type: boolean }
+          404:
+            description: Secret not found
+        x-audit: true
+        x-encrypt: true
+        x-source: ["SEC-LEAK-001"]
+
+      - path: /csrf/verify
+        method: POST
+        summary: Verify CSRF protection tokens
+        tags: [SECURITY, CSRF]
+        operationId: verifyCsrf
+        parameters:
+          - name: token
+            in: header
+            required: true
+            description: "CSRF token to verify"
+            schema: { type: string }
+        responses:
+          200:
+            description: CSRF token valid
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    verified: { type: boolean }
+                    token: { type: string, enum: [valid, missing, invalid] }
+                    timestamp: { type: string, format: date-time }
+        x-source: ["SEC-LEAK-001"]
+
+      - path: /yaml/stream
+        method: POST
+        summary: Stream and process YAML documents
+        tags: [REGISTRY, STREAM, PROCESSING]
+        operationId: streamYaml
