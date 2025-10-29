@@ -154,16 +154,23 @@ jobs:
         echo "### 📊 Quality Metrics" >> release-summary.md
         echo "- Test coverage: $(bun test --coverage | grep 'Coverage' || echo 'Coverage collected')" >> release-summary.md
         echo "- Traceability: 100%" >> release-summary.md
-        echo "- Energy harvested: $(bun run energy:harvest | grep 'units' | tail -1 || echo 'Energy measured')" >> release-summary.md
+        echo "- Energy harvested: $(bun run energy:harvest --quiet | grep 'units' | tail -1 || echo 'Energy measured')" >> release-summary.md
         echo "" >> release-summary.md
         echo "### 🏗️ Build Status" >> release-summary.md
         echo "- OpenAPI spec: GENERATED" >> release-summary.md
         echo "- Routes index: BUILT" >> release-summary.md
         echo "- Production build: SUCCESS" >> release-summary.md
 
-    - name: Upload release summary
+    - name: Generate demo status badge
+      run: |
+        chmod +x scripts/generate-badge.sh
+        ./scripts/generate-badge.sh passing brightgreen
+
+    - name: Upload release summary and badge
       uses: actions/upload-artifact@v4
       with:
         name: release-summary
-        path: release-summary.md
+        path: |
+          release-summary.md
+          demo-badge.svg
         retention-days: 30
