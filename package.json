@@ -38,6 +38,8 @@
     "dev:clean": "npm run clean && bun run dev",
     "test:clean": "npm run clean && bun test",
     "cleanup": "./scripts/cleanup-bun.sh",
+    "monitor": "./scripts/monitor-resources.sh",
+    "monitor:quick": "./scripts/monitor-resources.sh --single",
     "bench": "bun run scripts/benchmark.js",
     "build:fullstack": "bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
     "build:executable": "bun run scripts/api-gen.js --generate-client --generate-docs && bun build --compile ./src/api/gateway.ts --outfile ./bin/citadel-gateway",
