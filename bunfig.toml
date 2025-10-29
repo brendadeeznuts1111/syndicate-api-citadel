@@ -1,0 +1,43 @@
+# Bun Configuration - Syndicate API Citadel
+# Leveraging Bun 1.3 advanced features for optimal performance
+
+[install]
+# Faster installs with selective hoisting (Bun 1.3)
+publicHoistPattern = ["@types/*", "*eslint*", "*prettier*", "*typescript*"]
+hoistPattern = ["@types/*", "*eslint*", "*prettier*", "*typescript*"]
+
+[test]
+# Concurrent testing configuration (Bun 1.3)
+concurrentTestGlob = ["**/*.test.ts", "**/*.spec.ts"]
+maxConcurrency = 20
+
+# Coverage and quality settings
+coveragePathIgnorePatterns = ["node_modules", ".git", "dist", "coverage"]
+updateSnapshots = false  # Stricter CI behavior
+
+# Enhanced runtime gate settings
+smol = true  # Memory-efficient testing
+bail = 3     # Stop after 3 failures
+
+[build]
+# Optimized build settings
+target = "bun"
+minify = true
+sourcemap = "external"
+outdir = "dist"
+
+# Bundle splitting for better performance
+splitting = true
+format = "esm"
+
+[run]
+# Hot reload and debugging
+hot = false  # Enable with --hot flag
+inspect = false  # Enable with --inspect flag
+
+# Environment settings
+env = { NODE_ENV = "development", BUN_DEBUG = "0" }
+
+# Performance tuning
+maxHttpHeaderSize = 16384
+maxRequestBodySize = "50mb"

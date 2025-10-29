@@ -75,12 +75,15 @@ echo
 # Start CI simulation in background
 run_background "ci" "bun run audit:ci"
 
-# Run enhanced test suite
+# Run enhanced test suite with Bun 1.3 features
 run_test "Enhanced Test Suite" "bun test --smol --coverage --bail=3"
+run_test "Concurrent Testing" "bun test --max-concurrency 10 --smol --bail=1"
+run_test "Randomized Testing" "bun test --randomize --seed 12345 --bail=1"
 run_test "Timezone Matrix" "bun test test/tz-matrix.test.ts"
 run_test "Memory Leak Detection" "bun test test/memory.test.ts"
 run_test "Async Leak Detection" "bun test test/async-leak.test.ts"
 run_test "Source Map Integrity" "bun test test/sourcemap.test.ts"
+run_test "Failing Tests" "bun test --grep 'failing'"
 
 # Wait for CI to complete
 echo -n "⏳ Waiting for CI validation... "
@@ -117,12 +120,17 @@ if [ $OVERALL_STATUS -eq 0 ]; then
     echo -e "${GREEN}🎉 ALL CHECKS PASSED - Runtime is Enhanced!${NC}"
     echo
     echo "✅ Enhanced runtime features validated:"
-    echo "   • Timezone matrix testing"
-    echo "   • Memory leak detection"
-    echo "   • Async leak detection"
-    echo "   • Source map integrity"
+    echo "   • Concurrent testing (Bun 1.3 test.concurrent)"
+    echo "   • Randomized test execution (--randomize --seed)"
+    echo "   • Timezone matrix testing across 4 timezones"
+    echo "   • Memory leak detection with GC validation"
+    echo "   • Async leak detection with mock testing"
+    echo "   • Source map integrity with Bun.build"
+    echo "   • Type testing with expectTypeOf()"
+    echo "   • New matchers (toHaveReturnedWith, etc.)"
     echo "   • 100% traceability audit"
     echo "   • Energy harvesting active"
+    echo "   • FileHandle.readLines() processing"
     echo "   • Production build ready"
     echo
     echo "🚀 Ready for deployment!"
