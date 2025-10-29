@@ -29,6 +29,15 @@ interface HarvestConfig {
   benchmarkDuration: number;
 }
 
+// Quiet mode for CLAUDECODE environment or --quiet flag
+const QUIET_MODE = process.env.CLAUDECODE === '1' || process.argv.includes('--quiet');
+
+function log(message: string, force = false) {
+  if (!QUIET_MODE || force) {
+    console.log(message);
+  }
+}
+
 // Performance metrics from Bun's deep truths
 interface BunEnergyMetrics {
   startupTime: number;        // 4x faster than Node.js

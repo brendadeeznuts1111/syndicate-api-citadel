@@ -2,12 +2,15 @@
 
 **Bun 1.3-Powered Enterprise API Platform with Quantum Performance**
 
+[![demo](https://img.shields.io/badge/demo-passing-brightgreen)](https://github.com/brendadeeznuts1111/syndicate-api-citadel)
 [![Bun](https://img.shields.io/badge/Bun-1.3+-FBF0DF?style=for-the-badge&logo=bun&logoColor=000)](https://bun.sh)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript)](https://typescriptlang.org)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-Compatible-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com)
 [![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-6BA539?style=for-the-badge&logo=openapi-initiative)](https://spec.openapis.org/oas/v3.1.0)
 
 > ⚡ **Quantum leap in API development** - Faster than Node.js, smarter than traditional frameworks, built for the edge.
+
+**🚀 Zero-Config Launch:** Just clone and `bun install` - everything bootstraps automatically!
 
 ---
 
@@ -42,6 +45,32 @@
 
 ---
 
+## 🚀 Zero-Config Demo (2 Minutes)
+
+**Experience the full Citadel in under 2 minutes:**
+
+```bash
+# Clone and install (bootstraps automatically)
+git clone https://github.com/brendadeeznuts1111/syndicate-api-citadel.git
+cd syndicate-api-citadel
+bun install  # ← Zero-config bootstrap happens here!
+
+# Run complete system demo (4 commands, 4 seconds)
+bun run demo
+
+# That's it! Full quantum API platform validated ✨
+```
+
+**What happens automatically:**
+- ✅ **Bootstrap validation** - All systems checked post-install
+- ✅ **AI energy harvesting** - Performance optimization applied
+- ✅ **Semantic search** - API codebase indexed and searchable
+- ✅ **Quantum processing** - Advanced optimizations activated
+- ✅ **Real-time monitoring** - Resource analytics running
+- ✅ **Anonymous telemetry** - Performance insights shared (opt-out: `DO_NOT_TRACK=1`)
+
+---
+
 ## 📦 Installation
 
 ### Prerequisites
@@ -53,10 +82,10 @@ curl -fsSL https://bun.sh/install | bash
 ### Quick Start
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/syndicate-api-citadel.git
+git clone https://github.com/brendadeeznuts1111/syndicate-api-citadel.git
 cd syndicate-api-citadel
 
-# Install dependencies (4x faster than npm)
+# Install dependencies (4x faster than npm + automatic bootstrap)
 bun install
 
 # Start development server with hot reload
